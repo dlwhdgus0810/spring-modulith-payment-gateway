@@ -12,7 +12,7 @@ interface UserEvent {
 }
 
 data class UserRegisteredEvent(
-    val id: String,
+    val userId: String,
     val phone: String,
     val email: String?,
     val firstName: String,
@@ -21,12 +21,12 @@ data class UserRegisteredEvent(
     override val eventId: String = UUID.randomUUID().toString(),
 ) : UserEvent {
     override val aggregateType = "user"
-    override val aggregateId = id
+    override val aggregateId = userId
     override val eventType = "UserRegistered"
 }
 
 data class UserUpdatedEvent(
-    val id: String,
+    val userId: String,
     val email: String?,
     val firstName: String,
     val lastName: String,
@@ -34,6 +34,6 @@ data class UserUpdatedEvent(
     override val eventId: String = UUID.randomUUID().toString()
 ) : UserEvent {
     override val aggregateType = "user"
-    override val aggregateId = id
+    override val aggregateId = userId
     override val eventType = "UserUpdated"
 }
