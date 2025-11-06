@@ -7,10 +7,7 @@ import java.util.*
 @JvmInline
 value class UserId(val value: UUID) {
     override fun toString(): String = value.toString()
-
-    companion object {
-        fun newId(): UserId = UserId(UUID.randomUUID())
-    }
+    companion object { fun newId(): UserId = UserId(UUID.randomUUID()) }
 }
 
 data class User(
@@ -28,7 +25,7 @@ data class User(
             val user = User(UserId.newId(), phone, email, firstName, lastName)
 
             val event = UserRegisteredEvent(
-                id = user.id.toString(),
+                userId = user.id.toString(),
                 phone = user.phone,
                 email = user.email,
                 firstName = user.firstName,
@@ -43,7 +40,7 @@ data class User(
         val updated = copy(email = email ?: this.email, firstName = firstName ?: this.firstName, lastName = lastName ?: this.lastName)
 
         val event = UserUpdatedEvent(
-            id = updated.id.toString(),
+            userId = updated.id.toString(),
             email = updated.email,
             firstName = updated.firstName,
             lastName = updated.lastName
