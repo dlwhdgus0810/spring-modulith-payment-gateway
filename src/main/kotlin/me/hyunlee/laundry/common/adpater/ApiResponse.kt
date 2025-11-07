@@ -1,4 +1,4 @@
-package me.hyunlee.laundry.common
+package me.hyunlee.laundry.common.adpater
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import org.springframework.http.HttpStatus

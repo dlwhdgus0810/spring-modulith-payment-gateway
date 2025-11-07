@@ -1,4 +1,4 @@
-package me.hyunlee.laundry.common
+package me.hyunlee.laundry.common.adpater
 
 import jakarta.persistence.Column
 import jakarta.persistence.MappedSuperclass

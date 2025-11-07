@@ -1,4 +1,4 @@
-package me.hyunlee.laundry.common
+package me.hyunlee.laundry.common.domain
 
 import java.util.*
 
