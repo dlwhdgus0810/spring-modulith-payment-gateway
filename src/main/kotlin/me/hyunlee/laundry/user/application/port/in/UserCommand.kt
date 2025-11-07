@@ -1,6 +1,6 @@
-package me.hyunlee.laundry.user.domain.port.`in`
+package me.hyunlee.laundry.user.application.port.`in`
 
-import me.hyunlee.laundry.common.UserId
+import me.hyunlee.laundry.common.domain.UserId
 import me.hyunlee.laundry.user.domain.model.Address
 
 sealed class UserCommand
