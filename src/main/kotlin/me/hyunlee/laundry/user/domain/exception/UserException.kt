@@ -1,5 +1,9 @@
 package me.hyunlee.laundry.user.domain.exception
 
-class DuplicateUserException(message: String) : RuntimeException(message)
-class DuplicatePhoneException(message: String) : RuntimeException(message)
-class UserNotFoundException(message: String) : RuntimeException(message)
+sealed class UserException(message: String) : RuntimeException(message) {
+
+    class DuplicateUserException(message: String) : UserException(message)
+    class DuplicatePhoneException(phone: String) : UserException("Phone already registered: $phone")
+    class UserNotFoundException(message: String) : UserException(message)
+
+}
