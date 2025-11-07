@@ -1,4 +1,4 @@
-package me.hyunlee.laundry.order.domain.port.out
+package me.hyunlee.laundry.order.application.port.out
 
 import me.hyunlee.laundry.order.domain.model.Order
 
