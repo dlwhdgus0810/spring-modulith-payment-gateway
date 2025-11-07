@@ -1,0 +1,1 @@
+package me.hyunlee.laundry.common;
