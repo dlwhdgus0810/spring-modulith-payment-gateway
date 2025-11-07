@@ -1,7 +1,7 @@
 package me.hyunlee.laundry.user.domain.port.out
 
+import me.hyunlee.laundry.common.UserId
 import me.hyunlee.laundry.user.domain.model.User
-import me.hyunlee.laundry.user.domain.model.UserId
 
 interface UserRepository {
     fun findById(id: UserId): User?
