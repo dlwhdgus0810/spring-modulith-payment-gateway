@@ -1,6 +1,6 @@
 package me.hyunlee.laundry.order.domain.model.vo
 
-import me.hyunlee.laundry.common.PaymentMethodId
+import me.hyunlee.laundry.common.domain.PaymentMethodId
 
 data class PaymentInfo(
     val methodId: PaymentMethodId,

@@ -1,6 +1,6 @@
 package me.hyunlee.laundry.order.domain.model
 
-import me.hyunlee.laundry.common.UserId
+import me.hyunlee.laundry.common.domain.UserId
 import me.hyunlee.laundry.order.domain.event.OrderCreatedEvent
 import me.hyunlee.laundry.order.domain.model.vo.PaymentInfo
 import me.hyunlee.order.domain.model.enums.OrderStatus

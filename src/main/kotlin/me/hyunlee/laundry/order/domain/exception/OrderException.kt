@@ -1,3 +1,6 @@
 package me.hyunlee.laundry.order.domain.exception
 
-class UserNotFoundException(userId: String) : RuntimeException("User not found: $userId")
+sealed class OrderException(message: String) : RuntimeException(message) {
+    class UserNotFoundException(userId: String) : OrderException("User not found: $userId")
+}
+
