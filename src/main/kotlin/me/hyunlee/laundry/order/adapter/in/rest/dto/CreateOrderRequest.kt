@@ -1,12 +1,12 @@
 package me.hyunlee.laundry.order.adapter.`in`.rest.dto
 
-import me.hyunlee.laundry.common.PaymentMethodId
-import me.hyunlee.laundry.common.UserId
+import me.hyunlee.laundry.common.domain.PaymentMethodId
+import me.hyunlee.laundry.common.domain.UserId
 import me.hyunlee.laundry.order.domain.model.Contact
 import me.hyunlee.laundry.order.domain.model.OrderItem
 import me.hyunlee.laundry.order.domain.model.catalog.AddOnType
 import me.hyunlee.laundry.order.domain.model.catalog.ServiceType
-import me.hyunlee.laundry.order.domain.port.`in`.command.CreateOrderCommand
+import me.hyunlee.laundry.order.application.port.`in`.command.CreateOrderCommand
 import me.hyunlee.order.domain.model.enums.TipSelection
 import me.hyunlee.order.domain.model.vo.*
 import java.math.BigDecimal

@@ -1,7 +1,7 @@
 package me.hyunlee.laundry.order.adapter.out.persistence.order
 
-import me.hyunlee.laundry.common.PaymentMethodId
-import me.hyunlee.laundry.common.UserId
+import me.hyunlee.laundry.common.domain.PaymentMethodId
+import me.hyunlee.laundry.common.domain.UserId
 import me.hyunlee.laundry.order.adapter.out.persistence.orderitem.OrderItemEntity
 import me.hyunlee.laundry.order.domain.model.Contact
 import me.hyunlee.laundry.order.domain.model.Order

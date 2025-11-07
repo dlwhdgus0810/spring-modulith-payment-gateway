@@ -1,7 +1,7 @@
 package me.hyunlee.laundry.order.adapter.out.persistence.order
 
 import me.hyunlee.laundry.order.domain.model.Order
-import me.hyunlee.laundry.order.domain.port.out.OrderRepository
+import me.hyunlee.laundry.order.application.port.out.OrderRepository
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
