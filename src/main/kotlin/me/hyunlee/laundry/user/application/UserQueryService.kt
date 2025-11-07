@@ -1,8 +1,8 @@
 package me.hyunlee.laundry.user.application
 
+import me.hyunlee.laundry.common.UserId
 import me.hyunlee.laundry.user.domain.exception.UserNotFoundException
 import me.hyunlee.laundry.user.domain.model.User
-import me.hyunlee.laundry.user.domain.model.UserId
 import me.hyunlee.laundry.user.domain.port.out.UserRepository
 import me.hyunlee.user.domain.port.inbound.UserQueryUseCase
 import org.springframework.stereotype.Service
