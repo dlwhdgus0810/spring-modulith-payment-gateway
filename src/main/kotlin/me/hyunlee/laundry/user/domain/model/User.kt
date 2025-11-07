@@ -1,17 +1,12 @@
 package me.hyunlee.laundry.user.domain.model
 
+import me.hyunlee.laundry.common.UserId
 import me.hyunlee.laundry.user.domain.event.UserRegisteredEvent
 import me.hyunlee.laundry.user.domain.event.UserUpdatedEvent
-import java.util.*
 
-@JvmInline
-value class UserId(val value: UUID) {
-    override fun toString(): String = value.toString()
-    companion object { fun newId(): UserId = UserId(UUID.randomUUID()) }
-}
 
 data class User(
-    val id: UserId,
+    val id: UserId = UserId.newId(),
     val phone: String,
     val email: String? = null,
     val firstName: String,
@@ -22,7 +17,12 @@ data class User(
 
     companion object {
         fun create(phone: String, email: String?, firstName: String, lastName: String): Pair<User, UserRegisteredEvent> {
-            val user = User(UserId.newId(), phone, email, firstName, lastName)
+            val user = User(
+                phone = phone,
+                email = email,
+                firstName = firstName,
+                lastName = lastName
+            )
 
             val event = UserRegisteredEvent(
                 userId = user.id.toString(),
