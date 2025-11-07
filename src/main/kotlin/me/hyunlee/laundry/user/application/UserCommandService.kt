@@ -1,13 +1,12 @@
 package me.hyunlee.laundry.user.application
 
-import me.hyunlee.laundry.user.domain.exception.DuplicatePhoneException
+import me.hyunlee.laundry.user.application.port.`in`.AddAddressCommand
+import me.hyunlee.laundry.user.application.port.`in`.RegisterUserCommand
+import me.hyunlee.laundry.user.application.port.`in`.UpdateUserProfileCommand
+import me.hyunlee.laundry.user.application.port.out.UserRepository
 import me.hyunlee.laundry.user.domain.model.User
-import me.hyunlee.laundry.user.domain.port.`in`.AddAddressCommand
-import me.hyunlee.laundry.user.domain.port.`in`.RegisterUserCommand
-import me.hyunlee.laundry.user.domain.port.`in`.UpdateUserProfileCommand
-import me.hyunlee.laundry.user.domain.port.out.UserRepository
-import me.hyunlee.user.domain.port.inbound.UserCommandUseCase
-import me.hyunlee.user.domain.port.inbound.UserQueryUseCase
+import me.hyunlee.user.domain.port.inbound.UserReadPort
+import me.hyunlee.user.domain.port.inbound.UserWritePort
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -15,13 +14,13 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class UserCommandService(
     private val repo : UserRepository,
-    private val query : UserQueryUseCase,
+    private val reader : UserReadPort,
     private val events: ApplicationEventPublisher
-) : UserCommandUseCase {
+) : UserWritePort {
 
     @Transactional
     override fun register(command: RegisterUserCommand): User {
-        require(repo.findByPhone(command.phone) == null) { throw DuplicatePhoneException("Phone already registered: ${command.phone}") }
+        reader.ensurePhoneAvailable(command.phone)
 
         val (user, event) = User.create(command.phone, command.email, command.firstName, command.lastName)
 
@@ -34,7 +33,7 @@ class UserCommandService(
 
     @Transactional
     override fun updateProfile(command: UpdateUserProfileCommand): User {
-        val user = query.getById(command.userId)
+        val user = reader.getById(command.userId)
 
         val (updated, event) = user.updateProfile(command.email, command.firstName, command.lastName)
 
@@ -47,7 +46,7 @@ class UserCommandService(
 
     @Transactional
     override fun addAddress(command: AddAddressCommand): User {
-        val user = query.getById(command.userId)
+        val user = reader.getById(command.userId)
 
         val updated = user.addAddress(command.address)
 

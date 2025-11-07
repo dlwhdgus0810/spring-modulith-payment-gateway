@@ -1,16 +1,17 @@
 package me.hyunlee.laundry.user.application
 
-import me.hyunlee.laundry.common.UserId
-import me.hyunlee.laundry.user.domain.exception.UserNotFoundException
+import me.hyunlee.laundry.common.domain.UserId
+import me.hyunlee.laundry.user.application.port.out.UserRepository
+import me.hyunlee.laundry.user.domain.exception.UserException.DuplicatePhoneException
+import me.hyunlee.laundry.user.domain.exception.UserException.UserNotFoundException
 import me.hyunlee.laundry.user.domain.model.User
-import me.hyunlee.laundry.user.domain.port.out.UserRepository
-import me.hyunlee.user.domain.port.inbound.UserQueryUseCase
+import me.hyunlee.user.domain.port.inbound.UserReadPort
 import org.springframework.stereotype.Service
 
 @Service
 class UserQueryService(
     private val repo : UserRepository,
-) : UserQueryUseCase {
+) : UserReadPort {
 
     override fun getById(id: UserId): User =
         repo.findById(id) ?: throw UserNotFoundException("User not found: ${id.value}")
@@ -20,5 +21,9 @@ class UserQueryService(
 
     override fun getByPhone(phone: String): User =
         repo.findByPhone(phone) ?: throw UserNotFoundException("User not found, phone: $phone")
+
+    override fun ensurePhoneAvailable(phone: String) {
+        repo.findByPhone(phone)?.let { throw DuplicatePhoneException(phone) }
+    }
 
 }
