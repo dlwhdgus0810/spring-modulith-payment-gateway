@@ -1,9 +1,9 @@
 package me.hyunlee.user.domain.port.inbound
 
 import me.hyunlee.laundry.user.domain.model.User
-import me.hyunlee.user.domain.port.inbound.commands.AddAddressCommand
-import me.hyunlee.user.domain.port.inbound.commands.RegisterUserCommand
-import me.hyunlee.user.domain.port.inbound.commands.UpdateUserProfileCommand
+import me.hyunlee.laundry.user.domain.port.`in`.AddAddressCommand
+import me.hyunlee.laundry.user.domain.port.`in`.RegisterUserCommand
+import me.hyunlee.laundry.user.domain.port.`in`.UpdateUserProfileCommand
 
 interface UserCommandUseCase {
     fun register(command: RegisterUserCommand): User

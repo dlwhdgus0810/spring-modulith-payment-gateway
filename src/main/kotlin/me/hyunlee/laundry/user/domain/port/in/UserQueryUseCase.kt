@@ -1,7 +1,7 @@
 package me.hyunlee.user.domain.port.inbound
 
+import me.hyunlee.laundry.common.UserId
 import me.hyunlee.laundry.user.domain.model.User
-import me.hyunlee.laundry.user.domain.model.UserId
 
 interface UserQueryUseCase {
     fun getById(id: UserId): User
