@@ -3,7 +3,7 @@ package me.hyunlee.laundry.user.adapter.`in`.rest
 import me.hyunlee.user.adapter.`in`.web.dto.AddAddressRequest
 import me.hyunlee.user.adapter.`in`.web.dto.RegisterUserRequest
 import me.hyunlee.user.adapter.`in`.web.dto.UpdateUserProfileRequest
-import me.hyunlee.user.domain.port.inbound.UserCommandUseCase
+import me.hyunlee.user.domain.port.inbound.UserWritePort
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
@@ -15,7 +15,7 @@ import java.util.*
 @RestController
 @RequestMapping("/api/users")
 class UserWriteController(
-    private val command : UserCommandUseCase
+    private val command : UserWritePort
 ) {
 
     @PostMapping

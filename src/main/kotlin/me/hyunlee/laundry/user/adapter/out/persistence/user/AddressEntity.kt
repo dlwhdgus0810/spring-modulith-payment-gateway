@@ -1,7 +1,7 @@
 package me.hyunlee.laundry.user.adapter.out.persistence.user
 
 import jakarta.persistence.*
-import me.hyunlee.laundry.common.BaseEntity
+import me.hyunlee.laundry.common.adpater.BaseEntity
 
 @Entity
 @Table(name = "addresses")

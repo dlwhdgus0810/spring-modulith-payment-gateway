@@ -1,6 +1,6 @@
 package me.hyunlee.laundry.user.adapter.out.persistence.user
 
-import me.hyunlee.laundry.common.UserId
+import me.hyunlee.laundry.common.domain.UserId
 import me.hyunlee.laundry.user.domain.model.Address
 import me.hyunlee.laundry.user.domain.model.User
 

@@ -1,6 +1,6 @@
 package me.hyunlee.laundry.user.domain.model
 
-import me.hyunlee.laundry.common.UserId
+import me.hyunlee.laundry.common.domain.UserId
 import me.hyunlee.laundry.user.domain.event.UserRegisteredEvent
 import me.hyunlee.laundry.user.domain.event.UserUpdatedEvent
 

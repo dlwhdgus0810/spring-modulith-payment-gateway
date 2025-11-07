@@ -1,8 +1,8 @@
 package me.hyunlee.laundry.user.adapter.out.persistence.user
 
-import me.hyunlee.laundry.common.UserId
+import me.hyunlee.laundry.common.domain.UserId
+import me.hyunlee.laundry.user.application.port.out.UserRepository
 import me.hyunlee.laundry.user.domain.model.User
-import me.hyunlee.laundry.user.domain.port.out.UserRepository
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 

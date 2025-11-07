@@ -3,11 +3,11 @@ package me.hyunlee.user.adapter.`in`.web.dto
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
-import me.hyunlee.laundry.common.UserId
+import me.hyunlee.laundry.common.domain.UserId
 import me.hyunlee.laundry.user.domain.model.Address
-import me.hyunlee.laundry.user.domain.port.`in`.AddAddressCommand
-import me.hyunlee.laundry.user.domain.port.`in`.RegisterUserCommand
-import me.hyunlee.laundry.user.domain.port.`in`.UpdateUserProfileCommand
+import me.hyunlee.laundry.user.application.port.`in`.AddAddressCommand
+import me.hyunlee.laundry.user.application.port.`in`.RegisterUserCommand
+import me.hyunlee.laundry.user.application.port.`in`.UpdateUserProfileCommand
 import java.util.*
 
 data class RegisterUserRequest(
