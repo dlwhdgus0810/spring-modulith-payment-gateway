@@ -1,7 +1,7 @@
 package me.hyunlee.laundry.user.adapter.out.persistence.user
 
 import jakarta.persistence.*
-import me.hyunlee.laundry.common.adpater.BaseEntity
+import me.hyunlee.laundry.common.adapter.BaseEntity
 import java.util.*
 
 @Entity

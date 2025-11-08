@@ -3,10 +3,10 @@ package me.hyunlee.laundry.user.application
 import me.hyunlee.laundry.user.application.port.`in`.AddAddressCommand
 import me.hyunlee.laundry.user.application.port.`in`.RegisterUserCommand
 import me.hyunlee.laundry.user.application.port.`in`.UpdateUserProfileCommand
+import me.hyunlee.laundry.user.application.port.`in`.UserReadPort
+import me.hyunlee.laundry.user.application.port.`in`.UserWritePort
 import me.hyunlee.laundry.user.application.port.out.UserRepository
 import me.hyunlee.laundry.user.domain.model.User
-import me.hyunlee.user.domain.port.inbound.UserReadPort
-import me.hyunlee.user.domain.port.inbound.UserWritePort
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

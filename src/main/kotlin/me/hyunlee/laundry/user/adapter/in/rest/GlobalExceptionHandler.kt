@@ -1,6 +1,6 @@
 package me.hyunlee.laundry.user.adapter.`in`.rest
 
-import me.hyunlee.laundry.common.adpater.ApiResponse
+import me.hyunlee.laundry.common.adapter.ApiResponse
 import me.hyunlee.laundry.user.domain.exception.UserException.UserNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus

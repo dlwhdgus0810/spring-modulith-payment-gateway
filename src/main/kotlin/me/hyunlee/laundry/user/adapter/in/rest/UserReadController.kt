@@ -1,7 +1,7 @@
 package me.hyunlee.laundry.user.adapter.`in`.rest
 
 import me.hyunlee.laundry.common.domain.UserId
-import me.hyunlee.user.domain.port.inbound.UserReadPort
+import me.hyunlee.laundry.user.application.port.`in`.UserReadPort
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*

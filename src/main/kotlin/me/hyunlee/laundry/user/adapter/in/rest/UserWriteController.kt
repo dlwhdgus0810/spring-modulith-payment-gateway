@@ -1,9 +1,9 @@
 package me.hyunlee.laundry.user.adapter.`in`.rest
 
+import me.hyunlee.laundry.user.application.port.`in`.UserWritePort
 import me.hyunlee.user.adapter.`in`.web.dto.AddAddressRequest
 import me.hyunlee.user.adapter.`in`.web.dto.RegisterUserRequest
 import me.hyunlee.user.adapter.`in`.web.dto.UpdateUserProfileRequest
-import me.hyunlee.user.domain.port.inbound.UserWritePort
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated

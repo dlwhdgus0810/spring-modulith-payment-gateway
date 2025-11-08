@@ -1,11 +1,11 @@
 package me.hyunlee.laundry.user.application
 
 import me.hyunlee.laundry.common.domain.UserId
+import me.hyunlee.laundry.user.application.port.`in`.UserReadPort
 import me.hyunlee.laundry.user.application.port.out.UserRepository
 import me.hyunlee.laundry.user.domain.exception.UserException.DuplicatePhoneException
 import me.hyunlee.laundry.user.domain.exception.UserException.UserNotFoundException
 import me.hyunlee.laundry.user.domain.model.User
-import me.hyunlee.user.domain.port.inbound.UserReadPort
 import org.springframework.stereotype.Service
 
 @Service
