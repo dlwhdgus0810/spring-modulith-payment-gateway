@@ -1,7 +1,7 @@
-package me.hyunlee.laundry.order.adapter.`in`.rest
+package me.hyunlee.laundry.order.adapter.`in`.web
 
-import me.hyunlee.laundry.common.adpater.ApiResponse
-import me.hyunlee.laundry.order.adapter.`in`.rest.dto.CreateOrderRequest
+import me.hyunlee.laundry.common.adapter.ApiResponse
+import me.hyunlee.laundry.order.adapter.`in`.web.dto.CreateOrderRequest
 import me.hyunlee.laundry.order.application.port.`in`.OrderCommandUseCase
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
