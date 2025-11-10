@@ -1,4 +1,4 @@
-package me.hyunlee.laundry.order.adapter.`in`.rest.dto
+package me.hyunlee.laundry.order.adapter.`in`.web.dto
 
 import me.hyunlee.laundry.common.domain.PaymentMethodId
 import me.hyunlee.laundry.common.domain.UserId
