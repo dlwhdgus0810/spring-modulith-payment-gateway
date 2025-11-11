@@ -2,14 +2,14 @@ package me.hyunlee.laundry.payment.adapter.out.persistence.embeddable
 
 import jakarta.persistence.*
 import me.hyunlee.laundry.payment.domain.model.AchVerificationStatus
-import me.hyunlee.laundry.payment.domain.model.PaymentMethodSummaryType
+import me.hyunlee.laundry.payment.domain.model.PaymentMethodType
 import me.hyunlee.laundry.payment.domain.model.WalletType
 
 @Embeddable
 data class PaymentMethodSummaryEmbeddable(
     @Enumerated(EnumType.STRING)
     @Column(name = "pm_summary_type", nullable = false)
-    val type: PaymentMethodSummaryType,
+    val type: PaymentMethodType,
 
     @Embedded
     var brand: PaymentBrandEmbeddable? = null,
