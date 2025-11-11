@@ -1,6 +1,6 @@
 package me.hyunlee.laundry.order.adapter.`in`.web
 
-import me.hyunlee.laundry.common.adapter.ApiResponse
+import me.hyunlee.laundry.common.adapter.`in`.web.ApiResponse
 import me.hyunlee.laundry.order.domain.exception.OrderException
 import org.slf4j.LoggerFactory
 import org.springframework.core.Ordered

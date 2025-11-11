@@ -1,7 +1,7 @@
 package me.hyunlee.laundry.order.adapter.out.persistence.order
 
 import jakarta.persistence.*
-import me.hyunlee.laundry.common.adapter.BaseEntity
+import me.hyunlee.laundry.common.adapter.out.persistence.BaseEntity
 import me.hyunlee.laundry.order.adapter.out.persistence.orderitem.OrderItemEntity
 import me.hyunlee.order.domain.model.enums.OrderStatus
 import java.util.*
