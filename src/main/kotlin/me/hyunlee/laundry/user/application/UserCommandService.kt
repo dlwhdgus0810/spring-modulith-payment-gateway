@@ -1,10 +1,7 @@
 package me.hyunlee.laundry.user.application
 
-import me.hyunlee.laundry.user.application.port.`in`.AddAddressCommand
-import me.hyunlee.laundry.user.application.port.`in`.RegisterUserCommand
-import me.hyunlee.laundry.user.application.port.`in`.UpdateUserProfileCommand
-import me.hyunlee.laundry.user.application.port.`in`.UserReadPort
-import me.hyunlee.laundry.user.application.port.`in`.UserWritePort
+import me.hyunlee.laundry.common.domain.phone.PhoneNumberNormalizer
+import me.hyunlee.laundry.user.application.port.`in`.*
 import me.hyunlee.laundry.user.application.port.out.UserRepository
 import me.hyunlee.laundry.user.domain.model.User
 import org.springframework.context.ApplicationEventPublisher
@@ -15,14 +12,17 @@ import org.springframework.transaction.annotation.Transactional
 class UserCommandService(
     private val repo : UserRepository,
     private val reader : UserReadPort,
-    private val events: ApplicationEventPublisher
+    private val events: ApplicationEventPublisher,
+    private val phoneNorm: PhoneNumberNormalizer,
 ) : UserWritePort {
 
     @Transactional
     override fun register(command: RegisterUserCommand): User {
-        reader.ensurePhoneAvailable(command.phone)
+        val normalized = try { phoneNorm.normalizeToE164(command.phone, null) } catch (e: IllegalArgumentException) { throw IllegalArgumentException("Invalid phone number") }
 
-        val (user, event) = User.create(command.phone, command.email, command.firstName, command.lastName)
+        reader.ensurePhoneAvailable(normalized)
+
+        val (user, event) = User.create(normalized, command.email, command.firstName, command.lastName)
 
         val saved = repo.save(user)
 

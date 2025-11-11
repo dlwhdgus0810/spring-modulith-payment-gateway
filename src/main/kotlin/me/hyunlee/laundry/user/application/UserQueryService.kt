@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service
 @Service
 class UserQueryService(
     private val repo : UserRepository,
+    private val phoneNorm: me.hyunlee.laundry.common.domain.phone.PhoneNumberNormalizer,
 ) : UserReadPort {
 
     override fun getById(id: UserId): User =
@@ -19,11 +20,14 @@ class UserQueryService(
     override fun getByCustomerId(customerId: String): User =
         repo.findByCustomerId(customerId) ?: throw UserNotFoundException("User not found: $customerId")
 
-    override fun getByPhone(phone: String): User =
-        repo.findByPhone(phone) ?: throw UserNotFoundException("User not found, phone: $phone")
+    override fun getByPhone(phone: String): User {
+        val normalized = try { phoneNorm.normalizeToE164(phone, null) } catch (e: IllegalArgumentException) { phone }
+        return repo.findByPhone(normalized) ?: throw UserNotFoundException("User not found, phone: $normalized")
+    }
 
     override fun ensurePhoneAvailable(phone: String) {
-        repo.findByPhone(phone)?.let { throw DuplicatePhoneException(phone) }
+        val normalized = try { phoneNorm.normalizeToE164(phone, null) } catch (e: IllegalArgumentException) { throw DuplicatePhoneException(phone) }
+        repo.findByPhone(normalized)?.let { throw DuplicatePhoneException(normalized) }
     }
 
 }
