@@ -28,7 +28,7 @@ class CommonGlobalExceptionHandler : CommonGlobalExceptionSupport() {
         badRequest(
             code = "JSON_PARSE_ERROR",
             message = "요청 본문을 읽을 수 없습니다.",
-            detail = ex.mostSpecificCause?.message ?: ex.message
+            detail = ex.mostSpecificCause.message ?: ex.message
         ).also { log.warn("JSON parse: {}", ex.message) }
 
     @ExceptionHandler(MethodArgumentNotValidException::class, BindException::class)
