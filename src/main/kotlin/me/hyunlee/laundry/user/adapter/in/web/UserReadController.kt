@@ -1,4 +1,4 @@
-package me.hyunlee.laundry.user.adapter.`in`.rest
+package me.hyunlee.laundry.user.adapter.`in`.web
 
 import me.hyunlee.laundry.common.domain.UserId
 import me.hyunlee.laundry.user.application.port.`in`.UserReadPort
