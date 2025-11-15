@@ -1,8 +1,8 @@
-package me.hyunlee.laundry.payment.domain.model
+package me.hyunlee.laundry.payment.domain.model.method
 
 import me.hyunlee.laundry.common.domain.PaymentMethodId
 import me.hyunlee.laundry.common.domain.UserId
-import me.hyunlee.laundry.payment.application.port.`in`.RetrievedPmInfo
+import me.hyunlee.laundry.payment.application.port.`in`.method.RetrievedPmInfo
 import java.time.Clock
 import java.time.Instant
 import java.time.Year

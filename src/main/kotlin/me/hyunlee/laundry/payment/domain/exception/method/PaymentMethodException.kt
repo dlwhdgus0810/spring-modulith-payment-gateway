@@ -1,4 +1,4 @@
-package me.hyunlee.laundry.payment.domain.exception
+package me.hyunlee.laundry.payment.domain.exception.method
 
 sealed class PaymentMethodException(message: String) : RuntimeException(message) {
     class AlreadyExists(userId: String, providerPmId: String) : PaymentMethodException(
@@ -15,4 +15,3 @@ sealed class PaymentMethodException(message: String) : RuntimeException(message)
         "SetupIntent failed with status=$status for pm=$pmId"
     )
 }
-

@@ -1,9 +1,9 @@
-package me.hyunlee.laundry.payment.domain.model
+package me.hyunlee.laundry.payment.domain.model.method
 
 sealed interface PaymentInfo
 
 enum class PaymentMethodType { CARD, WALLET, ACH }
-enum class WalletType { APPLE_PAY, GOOGLE_PAY, LINK }
+enum class WalletType { APPLE_PAY, GOOGLE_PAY, LINK, SAMSUNG_PAY }
 enum class AchVerificationStatus { UNKNOWN, PENDING, VERIFIED, FAILED }
 
 data class CardInfo(

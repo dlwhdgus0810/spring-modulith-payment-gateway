@@ -1,4 +1,4 @@
-package me.hyunlee.laundry.payment.domain.model
+package me.hyunlee.laundry.payment.domain.model.method
 
 import me.hyunlee.laundry.common.domain.UserId
 
