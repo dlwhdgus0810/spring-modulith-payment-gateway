@@ -1,8 +1,14 @@
-package me.hyunlee.laundry.payment.application.port.`in`
+package me.hyunlee.laundry.payment.application.port.`in`.method
 
 import me.hyunlee.laundry.common.domain.PaymentMethodId
 import me.hyunlee.laundry.common.domain.UserId
-import me.hyunlee.laundry.payment.domain.model.*
+import me.hyunlee.laundry.payment.domain.model.method.AchVerificationStatus
+import me.hyunlee.laundry.payment.domain.model.method.NewAchSpec
+import me.hyunlee.laundry.payment.domain.model.method.NewCardSpec
+import me.hyunlee.laundry.payment.domain.model.method.NewPaymentSpec
+import me.hyunlee.laundry.payment.domain.model.method.NewWalletSpec
+import me.hyunlee.laundry.payment.domain.model.method.PaymentSummary
+import me.hyunlee.laundry.payment.domain.model.method.WalletType
 
 /**
  * Command aggregate for PaymentMethod domain.

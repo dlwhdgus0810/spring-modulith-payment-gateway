@@ -1,8 +1,8 @@
-package me.hyunlee.laundry.payment.application.port.`in`
+package me.hyunlee.laundry.payment.application.port.`in`.method
 
 import me.hyunlee.laundry.common.domain.PaymentMethodId
 import me.hyunlee.laundry.common.domain.UserId
-import me.hyunlee.laundry.payment.domain.model.PaymentMethod
+import me.hyunlee.laundry.payment.domain.model.method.PaymentMethod
 
 interface PaymentMethodCommandUseCase {
     // Legacy/direct create (expects pm_* already tokenized/attached appropriately)
