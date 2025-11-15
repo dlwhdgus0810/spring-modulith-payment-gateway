@@ -16,11 +16,17 @@ class WebSecurityConfig {
 
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
-        http.csrf { it.disable() }
+        http
+            .csrf { it.disable() }
             .cors { } // 전역 CORS 활성화
-            .authorizeHttpRequests {
-                it.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                it.anyRequest().permitAll()
+            .authorizeHttpRequests { auth ->
+                auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                auth.requestMatchers("/actuator/**").permitAll()
+                auth.requestMatchers("/api/auth/**").permitAll()
+                auth.anyRequest().authenticated()
+            }
+            .oauth2ResourceServer { rs ->
+                rs.jwt { }
             }
         return http.build()
     }
