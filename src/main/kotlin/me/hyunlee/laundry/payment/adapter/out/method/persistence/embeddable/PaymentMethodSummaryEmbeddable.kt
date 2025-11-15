@@ -1,9 +1,9 @@
-package me.hyunlee.laundry.payment.adapter.out.persistence.embeddable
+package me.hyunlee.laundry.payment.adapter.out.method.persistence.embeddable
 
 import jakarta.persistence.*
-import me.hyunlee.laundry.payment.domain.model.AchVerificationStatus
-import me.hyunlee.laundry.payment.domain.model.PaymentMethodType
-import me.hyunlee.laundry.payment.domain.model.WalletType
+import me.hyunlee.laundry.payment.domain.model.method.AchVerificationStatus
+import me.hyunlee.laundry.payment.domain.model.method.PaymentMethodType
+import me.hyunlee.laundry.payment.domain.model.method.WalletType
 
 @Embeddable
 data class PaymentMethodSummaryEmbeddable(

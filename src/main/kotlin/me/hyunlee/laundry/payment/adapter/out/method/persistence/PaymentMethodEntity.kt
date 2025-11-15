@@ -1,9 +1,9 @@
-package me.hyunlee.laundry.payment.adapter.out.persistence
+package me.hyunlee.laundry.payment.adapter.out.method.persistence
 
 import jakarta.persistence.*
 import me.hyunlee.laundry.common.adapter.out.persistence.BaseEntity
-import me.hyunlee.laundry.payment.adapter.out.persistence.embeddable.PaymentMethodSummaryEmbeddable
-import me.hyunlee.laundry.payment.domain.model.PaymentMethodStatus
+import me.hyunlee.laundry.payment.adapter.out.method.persistence.embeddable.PaymentMethodSummaryEmbeddable
+import me.hyunlee.laundry.payment.domain.model.method.PaymentMethodStatus
 import java.util.*
 
 @Entity

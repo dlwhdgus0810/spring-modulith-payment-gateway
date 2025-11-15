@@ -1,4 +1,4 @@
-package me.hyunlee.laundry.payment.adapter.out.persistence.embeddable
+package me.hyunlee.laundry.payment.adapter.out.method.persistence.embeddable
 
 import jakarta.persistence.Column
 import jakarta.persistence.Embeddable

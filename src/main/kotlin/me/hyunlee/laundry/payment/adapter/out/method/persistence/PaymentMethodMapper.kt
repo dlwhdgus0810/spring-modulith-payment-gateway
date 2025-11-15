@@ -1,10 +1,17 @@
-package me.hyunlee.laundry.payment.adapter.out.persistence
+package me.hyunlee.laundry.payment.adapter.out.method.persistence
 
 import me.hyunlee.laundry.common.domain.PaymentMethodId
 import me.hyunlee.laundry.common.domain.UserId
-import me.hyunlee.laundry.payment.adapter.out.persistence.embeddable.PaymentBrandEmbeddable
-import me.hyunlee.laundry.payment.adapter.out.persistence.embeddable.PaymentMethodSummaryEmbeddable
-import me.hyunlee.laundry.payment.domain.model.*
+import me.hyunlee.laundry.payment.adapter.out.method.persistence.embeddable.PaymentBrandEmbeddable
+import me.hyunlee.laundry.payment.adapter.out.method.persistence.embeddable.PaymentMethodSummaryEmbeddable
+import me.hyunlee.laundry.payment.domain.model.method.AchInfo
+import me.hyunlee.laundry.payment.domain.model.method.AchVerificationStatus
+import me.hyunlee.laundry.payment.domain.model.method.CardInfo
+import me.hyunlee.laundry.payment.domain.model.method.PaymentInfo
+import me.hyunlee.laundry.payment.domain.model.method.PaymentMethod
+import me.hyunlee.laundry.payment.domain.model.method.PaymentMethodType
+import me.hyunlee.laundry.payment.domain.model.method.PaymentSummary
+import me.hyunlee.laundry.payment.domain.model.method.WalletInfo
 
 fun PaymentMethod.toEntity(): PaymentMethodEntity {
     return PaymentMethodEntity(
