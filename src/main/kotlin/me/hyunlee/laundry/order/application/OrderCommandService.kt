@@ -19,7 +19,6 @@ class OrderCommandService(
     override fun create(command: CreateOrderCommand): Order {
         // userId, pmId validation needed
         // create snapshot
-
         val (order, event) = Order.create(command.userId, PaymentInfo(command.pmId), command.contact, command.schedule, command.bagCount, command.items, command.tip, command.idempotentKey)
 
         val saved = repo.save(order)
