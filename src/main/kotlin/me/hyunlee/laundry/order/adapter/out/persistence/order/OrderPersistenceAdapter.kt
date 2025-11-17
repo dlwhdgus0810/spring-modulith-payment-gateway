@@ -15,4 +15,8 @@ class OrderPersistenceAdapter(
     override fun save(order: Order): Order {
         return jpa.save(order.toEntity()).toDomain()
     }
+
+    override fun findById(id: java.util.UUID): Order? {
+        return jpa.findById(id).map { it.toDomain() }.orElse(null)
+    }
 }
