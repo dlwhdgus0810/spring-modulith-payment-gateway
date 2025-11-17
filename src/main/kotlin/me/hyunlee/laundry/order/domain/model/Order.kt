@@ -30,11 +30,9 @@ data class Order(
 
     val status: OrderStatus,
 
-    val idempotentKey: String?,
     val createdAt: Instant = Instant.now(),
     val updatedAt: Instant = Instant.now()
 ) {
-
     companion object {
         fun create(
             userId: UserId,
@@ -44,7 +42,6 @@ data class Order(
             bagCount: BagCount,
             items: List<OrderItem>,
             tip: Tip?,
-            idempotentKey: String?
         ): Pair<Order, OrderCreatedEvent> {
             val order = Order(
                 userId = userId,
@@ -54,15 +51,13 @@ data class Order(
                 bagCount = bagCount,
                 items = items,
                 tip = tip,
-                status = OrderStatus.CREATED,
-                idempotentKey = idempotentKey,
+                status = OrderStatus.PENDING_AUTH,
             )
 
             val event = OrderCreatedEvent(
                 orderId = order.id.toString(),
                 userId = order.userId.toString(),
                 pmId = order.payment.methodId.value.toString(),
-                idempotentKey = order.idempotentKey,
             )
 
             return order to event
