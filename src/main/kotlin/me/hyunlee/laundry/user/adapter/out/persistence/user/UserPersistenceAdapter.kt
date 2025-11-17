@@ -28,4 +28,9 @@ class UserPersistenceAdapter(
     override fun existsById(id: UserId): Boolean =
         jpa.existsById(id.value)
 
+    @Transactional
+    override fun linkCustomerIfAbsent(userId: UserId, customerId: String): Boolean {
+        val updated = jpa.linkCustomerIfAbsent(userId.value, customerId)
+        return updated > 0
+    }
 }
