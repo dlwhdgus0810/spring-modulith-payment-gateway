@@ -2,6 +2,7 @@ package me.hyunlee.laundry.user.adapter.out.persistence.user
 
 import jakarta.persistence.*
 import me.hyunlee.laundry.common.adapter.out.persistence.BaseEntity
+import me.hyunlee.laundry.user.domain.model.Role
 import java.util.*
 
 @Entity
@@ -25,6 +26,10 @@ class UserEntity (
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
     var addresses: MutableList<AddressEntity> = mutableListOf(),
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    var role: Role,
 
     @Column(length = 255, unique = true)
     var customerId: String? = null,

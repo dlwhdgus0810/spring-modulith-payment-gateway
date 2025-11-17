@@ -4,6 +4,9 @@ import me.hyunlee.laundry.common.domain.UserId
 import me.hyunlee.laundry.user.domain.event.UserRegisteredEvent
 import me.hyunlee.laundry.user.domain.event.UserUpdatedEvent
 
+enum class Role {
+    ADMIN, USER
+}
 
 data class User(
     val id: UserId = UserId.newId(),
@@ -12,6 +15,7 @@ data class User(
     val firstName: String,
     val lastName: String,
     val addresses: List<Address> = emptyList(),
+    val role: Role = Role.USER,
     val customerId: String? = null
 ) {
 
@@ -47,6 +51,11 @@ data class User(
         )
 
         return updated to event
+    }
+
+    fun linkCustomer(newCustomerId: String): User {
+        require(this.customerId == null || this.customerId == newCustomerId) { "CustomerId already set and different" }
+        return if (this.customerId == newCustomerId) this else copy(customerId = newCustomerId)
     }
 
     fun addAddress(newAddress: Address): User {

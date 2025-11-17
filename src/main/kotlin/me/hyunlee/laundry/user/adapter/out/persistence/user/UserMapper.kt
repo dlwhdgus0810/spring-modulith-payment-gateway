@@ -12,6 +12,7 @@ fun UserEntity.toDomain() : User {
         firstName = firstName,
         lastName = lastName,
         addresses = addresses.map { it.toDomain() },
+        role = role,
         customerId = customerId
     )
 }
@@ -23,6 +24,7 @@ fun User.toEntity() : UserEntity {
         email = email,
         firstName = firstName,
         lastName = lastName,
+        role = role,
         customerId = customerId
     )
 
