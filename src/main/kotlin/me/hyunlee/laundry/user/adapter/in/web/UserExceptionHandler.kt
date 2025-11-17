@@ -21,7 +21,7 @@ class UserExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException::class)
     fun handle(e: UserNotFoundException, req: WebRequest): ResponseEntity<ApiResponse<Nothing>> {
-        logger.warn("[USER] user not found: ${e.message}")
+        logger.warn("[USER] user not found: ${e.message}, path: ${getPath(req)}")
 
         val response = ApiResponse.exceptionError<Nothing>(
             msg = e.message ?: "User not found",
@@ -34,7 +34,7 @@ class UserExceptionHandler {
 
     @ExceptionHandler(Exception::class)
     fun handle(e: Exception, req: WebRequest): ResponseEntity<ApiResponse<Nothing>> {
-        logger.warn("error occurred: ${e.message}")
+        logger.warn("error occurred: ${e.message}, path: ${getPath(req)}")
 
         val response = ApiResponse.exceptionError<Nothing>(
             msg = e.message ?: "[USER] error occurred",
