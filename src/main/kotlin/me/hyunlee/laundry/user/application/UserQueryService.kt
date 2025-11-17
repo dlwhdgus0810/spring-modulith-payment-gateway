@@ -1,17 +1,17 @@
 package me.hyunlee.laundry.user.application
 
 import me.hyunlee.laundry.common.domain.UserId
+import me.hyunlee.laundry.common.domain.phone.PhoneNumberNormalizer
 import me.hyunlee.laundry.user.application.port.`in`.UserReadPort
 import me.hyunlee.laundry.user.application.port.out.UserRepository
 import me.hyunlee.laundry.user.domain.exception.UserException.DuplicatePhoneException
 import me.hyunlee.laundry.user.domain.exception.UserException.UserNotFoundException
 import me.hyunlee.laundry.user.domain.model.User
 import org.springframework.stereotype.Service
-
 @Service
 class UserQueryService(
     private val repo : UserRepository,
-    private val phoneNorm: me.hyunlee.laundry.common.domain.phone.PhoneNumberNormalizer,
+    private val phoneNorm: PhoneNumberNormalizer,
 ) : UserReadPort {
 
     override fun getById(id: UserId): User =

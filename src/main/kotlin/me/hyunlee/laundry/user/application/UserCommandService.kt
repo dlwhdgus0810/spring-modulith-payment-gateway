@@ -18,7 +18,7 @@ class UserCommandService(
 
     @Transactional
     override fun register(command: RegisterUserCommand): User {
-        val normalized = try { phoneNorm.normalizeToE164(command.phone, null) } catch (e: IllegalArgumentException) { throw IllegalArgumentException("Invalid phone number") }
+        val normalized = try { phoneNorm.normalizeToE164(command.phone, null) } catch (_: IllegalArgumentException) { throw IllegalArgumentException("Invalid phone number") }
 
         reader.ensurePhoneAvailable(normalized)
 
