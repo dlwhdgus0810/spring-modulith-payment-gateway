@@ -1,5 +1,7 @@
 package me.hyunlee.laundry.common.adapter.config
 
+import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -10,15 +12,26 @@ import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
+@ConfigurationProperties(prefix = "cors")
+data class CorsConfigProps(
+    var allowedOrigins: List<String> = emptyList(),
+    var allowedMethods: List<String> = listOf("GET","POST","PUT","PATCH","DELETE","OPTIONS"),
+    var allowedHeaders: List<String> = listOf("*"),
+    var exposedHeaders: List<String> = listOf("Location","Authorization"),
+    var allowCredentials: Boolean = true,
+    var maxAge: Long = 3600
+)
+
 @Configuration
 @EnableWebSecurity
+@EnableConfigurationProperties(CorsConfigProps::class)
 class WebSecurityConfig {
 
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .csrf { it.disable() }
-            .cors { } // 전역 CORS 활성화
+            .cors { }
             .authorizeHttpRequests { auth ->
                 auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 auth.requestMatchers("/actuator/**").permitAll()
@@ -32,16 +45,20 @@ class WebSecurityConfig {
     }
 
     @Bean
-    fun corsConfigurationSource(): CorsConfigurationSource {
-        val c = CorsConfiguration()
-        c.allowedOrigins = listOf("http://localhost:3000")
-        c.allowedMethods = listOf("GET","POST","PUT","PATCH","DELETE","OPTIONS")
-        c.allowedHeaders = listOf("*")
-        c.exposedHeaders = listOf("Location","Authorization")
-        c.allowCredentials = true
-        c.maxAge = 3600
-        return UrlBasedCorsConfigurationSource().apply {
-            registerCorsConfiguration("/**", c)
+    fun corsConfigurationSource(): CorsConfigurationSource =
+        CorsConfiguration().apply {
+            allowedOrigins = listOf(
+                "http://3.150.41.72:3000",
+                "http://3.150.41.72"
+            )
+            allowedMethods = listOf("GET","POST","PUT","PATCH","DELETE","OPTIONS")
+            allowedHeaders = listOf("*")
+            exposedHeaders = listOf("Location", "Authorization")
+            allowCredentials = true
+            maxAge = 3600
+        }.let { config ->
+            UrlBasedCorsConfigurationSource().apply {
+                registerCorsConfiguration("/**", config)
+            }
         }
-    }
 }
