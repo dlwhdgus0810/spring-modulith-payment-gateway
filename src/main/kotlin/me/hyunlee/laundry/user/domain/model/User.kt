@@ -15,7 +15,7 @@ data class User(
     val firstName: String,
     val lastName: String,
     val addresses: List<Address> = emptyList(),
-    val role: Role = Role.USER,
+    val role: Role = Role.ADMIN,
     val customerId: String? = null
 ) {
 
