@@ -1,4 +1,3 @@
-HELP.md
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -43,3 +42,10 @@ out/
 /src/main/resources/application.yml
 /requets.http
 /.gitattributes
+/domain_model.md
+/PAYMENT_METHODS_HYBRID_WORKFLOW.md
+/ARCHITECTURE.md
+/.env
+/README
+compose.yml
+Dockerfile

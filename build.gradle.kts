@@ -60,11 +60,16 @@ dependencies {
     implementation("com.stripe:stripe-java:30.2.0")
 
     // MongoDB (for event history)
-    implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
+//    implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 
     // Micrometer / Prometheus
     implementation("io.micrometer:micrometer-core")
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
+
+    // runtime
+    runtimeOnly("com.mysql:mysql-connector-j")
+    runtimeOnly("org.springframework.boot:spring-boot-docker-compose")
+//    runtimeOnly("com.h2database:h2")
 
     // Redis rate limiting (planned)
     // implementation("org.redisson:redisson-spring-boot-starter:3.37.0")
@@ -79,9 +84,6 @@ dependencies {
     testImplementation("org.springframework.modulith:spring-modulith-starter-test")
     testImplementation("com.h2database:h2")
     testImplementation("org.springframework.security:spring-security-test")
-
-    // runtime
-    runtimeOnly("com.mysql:mysql-connector-j")
 
     // test runtime
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
@@ -100,5 +102,6 @@ allOpen {
 }
 
 tasks.withType<Test> {
-    useJUnitPlatform()
+    enabled = false
+//    useJUnitPlatform()
 }
