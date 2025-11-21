@@ -11,7 +11,12 @@ import org.springframework.stereotype.Service
 class OrderQueryService(
     private val repo: OrderRepository
 ) : OrderQueryUseCase {
-    override fun getById(orderId: OrderId): Order {
-        return repo.findById(orderId.value) ?: throw OrderException.OrderNotFoundException(orderId.toString());
-    }
+
+    override fun getAll(): List<Order> =
+        repo.findAll()
+
+    override fun getById(orderId: OrderId): Order =
+        repo.findById(orderId.value) ?: throw OrderException.OrderNotFoundException(orderId.toString());
+
+
 }
