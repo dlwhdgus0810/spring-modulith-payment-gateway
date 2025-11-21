@@ -25,7 +25,9 @@ data class CorsConfigProps(
 @Configuration
 @EnableWebSecurity
 @EnableConfigurationProperties(CorsConfigProps::class)
-class WebSecurityConfig {
+class WebSecurityConfig(
+    private val corsProps: CorsConfigProps
+) {
 
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
@@ -36,6 +38,7 @@ class WebSecurityConfig {
                 auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 auth.requestMatchers("/actuator/**").permitAll()
                 auth.requestMatchers("/api/auth/**").permitAll()
+                auth.requestMatchers("/api/places/**").permitAll()
                 auth.anyRequest().authenticated()
             }
             .oauth2ResourceServer { rs ->
@@ -47,15 +50,12 @@ class WebSecurityConfig {
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource =
         CorsConfiguration().apply {
-            allowedOrigins = listOf(
-                "http://3.150.41.72:3000",
-                "http://3.150.41.72"
-            )
-            allowedMethods = listOf("GET","POST","PUT","PATCH","DELETE","OPTIONS")
-            allowedHeaders = listOf("*")
-            exposedHeaders = listOf("Location", "Authorization")
-            allowCredentials = true
-            maxAge = 3600
+            allowedOrigins = corsProps.allowedOrigins
+            allowedMethods = corsProps.allowedMethods
+            allowedHeaders = corsProps.allowedHeaders
+            exposedHeaders = corsProps.exposedHeaders
+            allowCredentials = corsProps.allowCredentials
+            maxAge = corsProps.maxAge
         }.let { config ->
             UrlBasedCorsConfigurationSource().apply {
                 registerCorsConfiguration("/**", config)
