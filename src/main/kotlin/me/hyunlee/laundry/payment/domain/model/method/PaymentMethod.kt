@@ -48,7 +48,7 @@ data class PaymentMethod(
 
                 is NewAchSpec -> {
                     require(spec.bankName.isNotBlank()) { "bankName required" }
-                    require(spec.mandateId.isNotBlank()) { "mandateId required" }
+
 
                     spec.last4?.let { require(it.length == 4) { "last4 must be 4 chars" } }
 
