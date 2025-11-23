@@ -9,7 +9,7 @@ interface PaymentMethodCommandUseCase {
     fun create(command : CreatePaymentMethodCommand) : PaymentMethod
 
     // New card/wallet onboarding: start and finalize (client-side 3DS confirmation)
-    fun startSetupIntent(userId: UserId, paymentMethodType: String = "card", idempotentKey: String? = null): StartSetupIntentResult
+    fun startSetupIntent(userId: UserId, idempotentKey: String): StartSetupIntentResult
     fun finalizeSetupIntent(userId: UserId, setupIntentId: String, nickname: String? = null, setAsDefault: Boolean = false): PaymentMethod
 
     fun setDefault(userId: UserId, paymentMethodId: PaymentMethodId)
