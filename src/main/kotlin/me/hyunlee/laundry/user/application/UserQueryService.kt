@@ -14,6 +14,9 @@ class UserQueryService(
     private val phoneNorm: PhoneNumberNormalizer,
 ) : UserReadPort {
 
+    override fun getAll(): List<User> =
+        repo.findAll()
+
     override fun getById(id: UserId): User =
         repo.findById(id) ?: throw UserNotFoundException("User not found: ${id.value}")
 

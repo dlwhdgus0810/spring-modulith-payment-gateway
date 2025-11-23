@@ -4,6 +4,7 @@ import me.hyunlee.laundry.common.domain.UserId
 import me.hyunlee.laundry.user.domain.model.User
 
 interface UserRepository {
+    fun findAll(): List<User>
     fun findById(id: UserId): User?
     fun findByCustomerId(customerId: String): User?
     fun findByPhone(phone: String): User?

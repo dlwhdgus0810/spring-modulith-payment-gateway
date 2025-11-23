@@ -16,6 +16,10 @@ class UserPersistenceAdapter(
     override fun save(user: User): User =
         jpa.save(user.toEntity()).toDomain()
 
+    override fun findAll(): List<User> {
+        return jpa.findAll().map { it.toDomain() }
+    }
+
     override fun findById(id: UserId): User? =
         jpa.findById(id.value).orElse(null)?.toDomain()
 
