@@ -2,7 +2,7 @@ package me.hyunlee.laundry.payment.application.transaction
 
 import me.hyunlee.laundry.payment.history.outbox.PaymentEventAppender
 import me.hyunlee.laundry.payment.history.outbox.PaymentEventEnvelope
-import me.hyunlee.laundry.payment.application.port.out.method.PaymentTransactionRepository
+import me.hyunlee.laundry.payment.application.port.out.transaction.PaymentTransactionRepository
 import me.hyunlee.laundry.payment.domain.model.transaction.PaymentTransactionStatus
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
