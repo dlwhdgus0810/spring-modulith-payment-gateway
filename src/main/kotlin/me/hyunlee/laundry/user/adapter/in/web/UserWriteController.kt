@@ -1,14 +1,18 @@
 package me.hyunlee.laundry.user.adapter.`in`.web
 
+import io.swagger.v3.oas.annotations.Operation
+import me.hyunlee.laundry.common.adapter.`in`.web.ApiResponse
+import me.hyunlee.laundry.user.adapter.`in`.web.dto.UserResponse
+import me.hyunlee.laundry.user.adapter.`in`.web.dto.toResponse
 import me.hyunlee.laundry.user.application.port.`in`.UserWritePort
 import me.hyunlee.user.adapter.`in`.web.dto.AddAddressRequest
 import me.hyunlee.user.adapter.`in`.web.dto.RegisterUserRequest
 import me.hyunlee.user.adapter.`in`.web.dto.UpdateUserProfileRequest
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
-import java.net.URI
 import java.util.*
 
 @Validated
@@ -19,27 +23,30 @@ class UserWriteController(
 ) {
 
     @PostMapping
-    suspend fun register(@RequestBody req: RegisterUserRequest): ResponseEntity<Any> {
-        val saved = command.register(req.toCommand())
-        val location = URI.create("/api/users/${saved.id.value}")
-        return ResponseEntity.created(location).body(saved)
+    @Operation(summary = "registerUser")
+    suspend fun register(@RequestBody req: RegisterUserRequest): ResponseEntity<ApiResponse<UserResponse>> {
+        val saved = command.register(req.toCommand()).toResponse()
+        return ApiResponse.success(saved)
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
+    @Operation(summary = "updateUserProfile")
     suspend fun updateProfile(
-        @PathVariable id: UUID,
-        @RequestBody req: UpdateUserProfileRequest
-    ): ResponseEntity<Any> {
-        val updated = command.updateProfile(req.toCommand(id))
-        return ResponseEntity.ok(updated)
+        @AuthenticationPrincipal jwt: Jwt,
+        @RequestBody req: UpdateUserProfileRequest) : ResponseEntity<ApiResponse<UserResponse>> {
+        val userId = UUID.fromString(jwt.subject)
+        val updated = command.updateProfile(req.toCommand(userId)).toResponse()
+        return ApiResponse.success(updated)
     }
 
-    @PostMapping("/{id}/addresses")
+    @PostMapping("/addresses")
+    @Operation(summary = "addUserAddress")
     suspend fun addAddress(
-        @PathVariable id: UUID,
+        @AuthenticationPrincipal jwt: Jwt,
         @RequestBody req: AddAddressRequest
-    ): ResponseEntity<Any> {
-        val saved = command.addAddress(req.toCommand(id))
-        return ResponseEntity.status(HttpStatus.OK).body(saved)
+    ): ResponseEntity<ApiResponse<UserResponse>> {
+        val userId = UUID.fromString(jwt.subject)
+        val saved = command.addAddress(req.toCommand(userId)).toResponse()
+        return ApiResponse.success(saved)
     }
 }
