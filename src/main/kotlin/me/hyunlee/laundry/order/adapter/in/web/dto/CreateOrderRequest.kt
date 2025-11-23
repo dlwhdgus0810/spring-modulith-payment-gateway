@@ -2,11 +2,10 @@ package me.hyunlee.laundry.order.adapter.`in`.web.dto
 
 import me.hyunlee.laundry.common.domain.PaymentMethodId
 import me.hyunlee.laundry.common.domain.UserId
-import me.hyunlee.laundry.order.domain.model.Contact
+import me.hyunlee.laundry.order.application.port.`in`.command.CreateOrderCommand
 import me.hyunlee.laundry.order.domain.model.OrderItem
 import me.hyunlee.laundry.order.domain.model.catalog.AddOnType
 import me.hyunlee.laundry.order.domain.model.catalog.ServiceType
-import me.hyunlee.laundry.order.application.port.`in`.command.CreateOrderCommand
 import me.hyunlee.order.domain.model.enums.TipSelection
 import me.hyunlee.order.domain.model.vo.*
 import java.math.BigDecimal
@@ -15,11 +14,8 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 data class CreateOrderRequest(
-    val userId: UUID,
     val pmId: UUID,
 
-    val phone: String,
-    val email: String?,
     val address: AddressRequest,
 
     val pickupDate: String,
@@ -29,15 +25,13 @@ data class CreateOrderRequest(
 
     val bagCount: Int,
     val items: List<OrderItemRequest>,
-    val tipCents: Long?,                        // tip 없으면 null
-
-    val idempotentKey: String?                  // client에서 생성한 key
+    val tip: TipRequest,
 ) {
-    fun toCommand(): CreateOrderCommand {
+    fun toCommand(currentUserId: UserId): CreateOrderCommand {
         return CreateOrderCommand(
-            userId = UserId(userId),
+            userId = currentUserId,
             pmId = PaymentMethodId(pmId),
-            contact = Contact(phone = phone, email = email, address = address.toDomain()),
+            address = address.toDomain(),
             schedule = Schedule(
                 pickupDate = isoDateParse(pickupDate),
                 pickupSlot = SlotIndex(pickupTime),
@@ -46,13 +40,30 @@ data class CreateOrderRequest(
             ),
             bagCount = BagCount(bagCount),
             items = items.map { it.toDomain() },
-            tip = tipCents?.let { Tip(TipSelection.CUSTOM, BigDecimal.valueOf(tipCents)) },
-            idempotentKey = idempotentKey
+            tip = buildTipOrNull(),
         )
     }
 
     private fun isoDateParse(isoDate : String): LocalDate {
         return LocalDate.parse(isoDate, DateTimeFormatter.ISO_DATE)
+    }
+
+    private fun buildTipOrNull(): Tip? {
+        val req = tip
+        return when (req.selection) {
+            TipSelection.PCT_10, TipSelection.PCT_15, TipSelection.PCT_20 -> {
+                require(req.tipCents == 0L) { "tipCents must be 0 when tip.selection is percentage" }
+                Tip(req.selection, null)
+            }
+            TipSelection.CUSTOM -> {
+                require(req.tipCents >= 0) { "tipCents must be >= 0" }
+                if (req.tipCents == 0L) {
+                    null
+                } else {
+                    Tip(TipSelection.CUSTOM, BigDecimal.valueOf(req.tipCents))
+                }
+            }
+        }
     }
 }
 
@@ -75,3 +86,8 @@ data class OrderItemRequest(
     fun toDomain(): OrderItem =
         OrderItem(serviceType = ServiceType.valueOf(serviceType), addOns = addOns.map { AddOnType.valueOf(it) }.toMutableSet())
 }
+
+data class TipRequest(
+    val selection: TipSelection,
+    val tipCents: Long,
+)

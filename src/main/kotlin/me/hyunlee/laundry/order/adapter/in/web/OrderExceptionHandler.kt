@@ -21,7 +21,7 @@ class OrderExceptionHandler {
 
     @ExceptionHandler(OrderException.UserNotFoundException::class)
     fun handle(e: OrderException.UserNotFoundException, req: WebRequest): ResponseEntity<ApiResponse<Nothing>> {
-        logger.warn("[ORDER] user not found: ${e.message}")
+        logger.warn("[ORDER] user not found: ${e.message}, path: ${getPath(req)}")
 
         val response = ApiResponse.exceptionError<Nothing>(
             msg = e.message ?: "User not found",
@@ -34,7 +34,7 @@ class OrderExceptionHandler {
 
     @ExceptionHandler(Exception::class)
     fun handle(e: Exception, req: WebRequest): ResponseEntity<ApiResponse<Nothing>> {
-        logger.warn("error occurred: ${e.message}")
+        logger.warn("[ORDER] error occurred: ${e.message}, path: ${getPath(req)}")
 
         val response = ApiResponse.exceptionError<Nothing>(
             msg = e.message ?: "[ORDER] error occurred",
