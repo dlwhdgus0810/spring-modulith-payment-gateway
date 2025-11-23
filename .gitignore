@@ -51,3 +51,8 @@ compose.yml
 Dockerfile
 /src/main/kotlin/me/hyunlee/laundry/auth/auth.http
 /src/main/resources/db/schema.sql
+/src/test/kotlin/me/hyunlee/laundry/payment/adapter/in/web/StripeWebhookControllerTests.kt
+/src/test/kotlin/me/hyunlee/laundry/payment/adapter/out/persistence/WebhookEventRepositoryTests.kt
+/docs/dynamic-catalog-migration.md
+/docs/user-read-api.md
+/src/test/resources/application.yml
