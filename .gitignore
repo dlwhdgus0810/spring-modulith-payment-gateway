@@ -49,3 +49,4 @@ out/
 /README
 compose.yml
 Dockerfile
+/src/main/kotlin/me/hyunlee/laundry/auth/auth.http

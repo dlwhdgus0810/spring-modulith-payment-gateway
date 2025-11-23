@@ -59,6 +59,8 @@ dependencies {
     // stripe
     implementation("com.stripe:stripe-java:30.2.0")
 
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14")
+
     // MongoDB (for event history)
 //    implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 
@@ -68,7 +70,7 @@ dependencies {
 
     // runtime
     runtimeOnly("com.mysql:mysql-connector-j")
-    runtimeOnly("org.springframework.boot:spring-boot-docker-compose")
+//    runtimeOnly("org.springframework.boot:spring-boot-docker-compose")
 //    runtimeOnly("com.h2database:h2")
 
     // Redis rate limiting (planned)
