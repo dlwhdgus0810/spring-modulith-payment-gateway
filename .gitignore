@@ -50,3 +50,4 @@ out/
 compose.yml
 Dockerfile
 /src/main/kotlin/me/hyunlee/laundry/auth/auth.http
+/src/main/resources/db/schema.sql
