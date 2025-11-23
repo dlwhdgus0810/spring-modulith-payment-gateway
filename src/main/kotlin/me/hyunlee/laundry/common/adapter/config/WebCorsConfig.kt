@@ -7,6 +7,9 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
@@ -30,19 +33,42 @@ class WebSecurityConfig(
 ) {
 
     @Bean
+    fun webSecurityCustomizer(): WebSecurityCustomizer {
+        return WebSecurityCustomizer { web ->
+            web.ignoring().requestMatchers(
+                "/v3/api-docs",
+                "/v3/api-docs/",
+                "/v3/api-docs/**",
+                "/swagger-ui.html",
+                "/swagger-ui/**",
+            )
+        }
+    }
+
+    @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .csrf { it.disable() }
             .cors { }
             .authorizeHttpRequests { auth ->
                 auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                auth.requestMatchers(
+                    "/v3/api-docs",
+                    "/v3/api-docs/",
+                    "/v3/api-docs/**",
+                    "/swagger-ui.html",
+                    "/swagger-ui/**"
+                ).permitAll()
                 auth.requestMatchers("/actuator/**").permitAll()
                 auth.requestMatchers("/api/auth/**").permitAll()
                 auth.requestMatchers("/api/places/**").permitAll()
+                auth.requestMatchers("/api/admin/**").hasRole("ADMIN")
                 auth.anyRequest().authenticated()
             }
-            .oauth2ResourceServer { rs ->
-                rs.jwt { }
+            .oauth2ResourceServer { oauth2 ->
+                oauth2.jwt { jwt ->
+                    jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())
+                }
             }
         return http.build()
     }
@@ -61,4 +87,16 @@ class WebSecurityConfig(
                 registerCorsConfiguration("/**", config)
             }
         }
+
+    @Bean
+    fun jwtAuthenticationConverter(): JwtAuthenticationConverter {
+        val authoritiesConverter = JwtGrantedAuthoritiesConverter().apply {
+            setAuthoritiesClaimName("roles")
+            setAuthorityPrefix("ROLE_")
+        }
+
+        return JwtAuthenticationConverter().apply {
+            setJwtGrantedAuthoritiesConverter(authoritiesConverter)
+        }
+    }
 }
