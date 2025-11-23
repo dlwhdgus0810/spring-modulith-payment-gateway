@@ -1,6 +1,7 @@
 package me.hyunlee.laundry.common.adapter.`in`.places
 
 import me.hyunlee.laundry.common.adapter.`in`.web.ApiResponse
+import io.swagger.v3.oas.annotations.Operation
 import me.hyunlee.laundry.common.adapter.out.places.GooglePlacesClient
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,10 +17,11 @@ class PlacesController(
 
     // GET /api/places/autocomplete?input=...&sessiontoken=...
     @GetMapping("/autocomplete")
+    @Operation(summary = "autocompletePlaces")
     fun autocomplete(
         @RequestParam("input") input: String,
         @RequestParam("sessiontoken", required = false) sessionToken: String?,
-    ): ResponseEntity<ApiResponse<Any>> {
+    ): ResponseEntity<ApiResponse<Map<String, Any?>>> {
         if (input.isBlank() || input.trim().length < 3) {
             return ApiResponse.success(mapOf("predictions" to emptyList<Any>()))
         }
@@ -29,10 +31,11 @@ class PlacesController(
 
     // GET /api/places/details?place_id=...&sessiontoken=...
     @GetMapping("/details")
+    @Operation(summary = "getPlaceDetails")
     fun details(
         @RequestParam("place_id") placeId: String,
         @RequestParam("sessiontoken", required = false) sessionToken: String?,
-    ): ResponseEntity<ApiResponse<Any>> {
+    ): ResponseEntity<ApiResponse<Map<String, Any?>>> {
         val json = places.details(placeId, sessionToken)
         return ApiResponse.success(json)
     }
