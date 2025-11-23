@@ -34,9 +34,6 @@ class OrderEntity(
     @Enumerated(EnumType.STRING)
     @Column(name = "order_status", length = 32, nullable = false)
     var status: OrderStatus,
-
-    var idempotentKey: String? = null,
-
 ) : BaseEntity() {
 
     @OneToMany(mappedBy = "order", cascade = [CascadeType.ALL], orphanRemoval = true)

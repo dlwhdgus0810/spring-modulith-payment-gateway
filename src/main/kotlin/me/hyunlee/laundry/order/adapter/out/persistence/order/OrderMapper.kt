@@ -21,7 +21,6 @@ fun OrderEntity.toDomain(): Order {
         bagCount = BagCount(bagCount),
         tip = tip?.toDomain(),
         status = status,
-        idempotentKey = idempotentKey,
         items = items.map { it.toDomain() }
     )
 }
@@ -33,9 +32,9 @@ fun Order.toEntity(): OrderEntity {
         payment = payment.toEntity(),
         contact = contact.toEntity(),
         schedule = schedule.toEntity(),
-        bagCount = bagCount.value, tip = tip?.toEntity(),
+        bagCount = bagCount.value,
+        tip = tip?.toEntity(),
         status = status,
-        idempotentKey = idempotentKey,
     )
 
     val childEntities = items.map { it.toEntity(oe) }
