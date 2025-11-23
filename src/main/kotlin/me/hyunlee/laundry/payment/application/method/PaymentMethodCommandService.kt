@@ -1,24 +1,19 @@
 package me.hyunlee.laundry.payment.application.method
 
+import me.hyunlee.laundry.common.application.idempotency.IdempotencyServicePort
 import me.hyunlee.laundry.common.domain.PaymentMethodId
 import me.hyunlee.laundry.common.domain.UserId
-import me.hyunlee.laundry.common.domain.event.payment.ProviderCustomerEnsuredEvent
+import me.hyunlee.laundry.payment.application.port.`in`.customer.CustomerProviderPort
+import me.hyunlee.laundry.payment.application.port.`in`.method.*
 import me.hyunlee.laundry.payment.application.port.`in`.method.RetrievedPmInfo.*
 import me.hyunlee.laundry.payment.application.port.out.method.PaymentMethodRepository
-import me.hyunlee.laundry.payment.application.port.`in`.method.CreatePaymentMethodCommand
-import me.hyunlee.laundry.payment.application.port.`in`.method.PaymentMethodCommandUseCase
-import me.hyunlee.laundry.payment.application.port.`in`.method.PaymentMethodProviderPort
-import me.hyunlee.laundry.payment.application.port.`in`.customer.CustomerProviderPort
-import me.hyunlee.laundry.payment.application.port.`in`.method.RetrievedPmInfo
-import me.hyunlee.laundry.payment.application.port.`in`.method.StartSetupIntentResult
-import me.hyunlee.laundry.payment.domain.exception.method.PaymentMethodException.*
+import me.hyunlee.laundry.payment.domain.exception.PaymentMethodException.*
 import me.hyunlee.laundry.payment.domain.model.method.NewAchSpec
 import me.hyunlee.laundry.payment.domain.model.method.NewCardSpec
 import me.hyunlee.laundry.payment.domain.model.method.NewWalletSpec
 import me.hyunlee.laundry.payment.domain.model.method.PaymentMethod
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.context.ApplicationEventPublisher
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -26,9 +21,9 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class PaymentMethodCommandService(
     private val repo: PaymentMethodRepository,
-    private val methodProvider: PaymentMethodProviderPort,
-    private val customerProvider: CustomerProviderPort,
-    private val publisher: ApplicationEventPublisher
+    private val paymentMethodPort: PaymentMethodProviderPort,
+    private val customerPort: CustomerProviderPort,
+    private val idemPort: IdempotencyServicePort,
 ) : PaymentMethodCommandUseCase {
 
     private val log: Logger = LoggerFactory.getLogger(PaymentMethodCommandService::class.java)
@@ -39,10 +34,10 @@ class PaymentMethodCommandService(
         if (repo.existsByUserAndProviderPmId(cmd.userId, cmd.stripePmId)) throw AlreadyExists(cmd.userId.toString(), cmd.stripePmId)
 
         // Ensure Stripe customer exists (delegated to StripePort impl or User integration behind it)
-        val customerId = ensureCustomerId(cmd.userId)
+        val customerId = customerPort.ensureCustomerId(cmd.userId.toString())
 
         // Confirm SetupIntent to attach pm_* to customer and authorize off_session usage
-        val setupStatus = methodProvider.confirmSetupIntent(customerId, cmd.stripePmId, "card", cmd.idempotentKey)
+        val setupStatus = paymentMethodPort.confirmPaymentMethodSetupIntent(customerId, cmd.stripePmId, "card", cmd.idempotentKey)
 
         // Accept both succeeded and requires_action (server cannot complete actions)
         if (setupStatus != "succeeded" && setupStatus != "requires_action") throw SetupIntentFailed(setupStatus, cmd.stripePmId)
@@ -57,24 +52,32 @@ class PaymentMethodCommandService(
     @Transactional
     override fun startSetupIntent(
         userId: UserId,
-        paymentMethodType: String,
-        idempotentKey: String?
+        idempotentKey: String
     ): StartSetupIntentResult {
-        val customerId = ensureCustomerId(userId)
+        val serverIdemKey = "pm_setup:$idempotentKey"
 
-        val si = methodProvider.createSetupIntent(customerId, paymentMethodType, "off_session", idempotentKey)
+        return idemPort.execute(
+            userId = userId.value,
+            key = serverIdemKey,
+            resourceType = "PM_SETUP",
+            responseType = StartSetupIntentResult::class.java
+        ) {
+            val customerId = customerPort.ensureCustomerId(userId.value.toString())
 
-        return StartSetupIntentResult(
-            setupIntentId = si.id,
-            clientSecret = si.clientSecret,
-            customerId = si.customerId
-        )
-    }
+            val si = paymentMethodPort.createPaymentMethodSetupIntent(
+                customerId = customerId,
+                usage = "off_session",
+                idempotencyKey = serverIdemKey  // Stripe에도 동일 키 전달
+            )
 
-    private fun ensureCustomerId(userId: UserId): String {
-        val customerId = customerProvider.ensureCustomer(userId.toString())
-        publisher.publishEvent(ProviderCustomerEnsuredEvent(userId, customerId))
-        return customerId
+            val result = StartSetupIntentResult(
+                setupIntentId = si.id,
+                clientSecret = si.clientSecret,
+                customerId = si.customerId
+            )
+
+            si.id to result
+        }
     }
 
     @Transactional
@@ -84,7 +87,7 @@ class PaymentMethodCommandService(
         nickname: String?,
         setAsDefault: Boolean
     ): PaymentMethod {
-        val si = methodProvider.retrieveSetupIntent(setupIntentId)
+        val si = paymentMethodPort.retrievePaymentMethodSetupIntent(setupIntentId)
         val pmId = requireNotNull(si.paymentMethodId) { "payment_method missing on SetupIntent" }
 
         // checkUserOwnsStripeCustomer(userId, si.customerId) // 필요 시 구현
@@ -93,7 +96,7 @@ class PaymentMethodCommandService(
         }
 
         // Fetch latest PM details from Stripe
-        val info = methodProvider.retrievePaymentInfo(pmId)
+        val info = paymentMethodPort.retrievePaymentMethodInfo(pmId)
         validateByType(info, si.status!!)
 
         // Fingerprint-based idempotency (Card/Wallet): if same card already exists for this user, reuse it
@@ -103,7 +106,7 @@ class PaymentMethodCommandService(
             return ensureDefaultIfRequested(userId, saved, setAsDefault)
         }
 
-        val created = createDomain(userId, pmId, info, nickname)
+        val created = createDomain(userId, pmId, info, si.mandateId, nickname)
         val saved = saveWithIdempotency(userId, created, info, pmId)
         return ensureDefaultIfRequested(userId, saved, setAsDefault)
     }
@@ -144,7 +147,7 @@ class PaymentMethodCommandService(
         return pm.markDefault()
     }
 
-    private fun createDomain(userId: UserId, pmId: String, info: RetrievedPmInfo, nickname: String?): PaymentMethod =
+    private fun createDomain(userId: UserId, pmId: String, info: RetrievedPmInfo, mandate: String?, nickname: String?): PaymentMethod =
         when (info) {
             is Card -> PaymentMethod.create(
                 NewCardSpec(
@@ -169,18 +172,21 @@ class PaymentMethodCommandService(
                 )
             )
 
-            is Ach -> PaymentMethod.create(
-                NewAchSpec(
-                    userId = userId,
-                    stripePmId = pmId,
-                    bankName = info.bankName,
-                    last4 = info.last4,
-                    mandateId = "",          // nullable 권장
-                    verification = info.verification,
-                    isDefault = false,
-                    nickname = nickname
+            is Ach -> {
+                val mandateId = requireNotNull(mandate) { "mandateId required" }
+                PaymentMethod.create(
+                    NewAchSpec(
+                        userId = userId,
+                        stripePmId = pmId,
+                        bankName = info.bankName,
+                        last4 = info.last4,
+                        mandateId = mandateId,
+                        verification = info.verification,
+                        isDefault = false,
+                        nickname = nickname
+                    )
                 )
-            )
+            }
         }
 
     @Transactional
@@ -204,13 +210,4 @@ class PaymentMethodCommandService(
         repo.unsetDefaultForUser(userId, paymentMethodId)
     }
 
-
-
-//    2) 커스텀 Outbox 테이블 구성 (세밀 제어·외부 연동용)
-//
-//    Stripe/Kafka/외부 API 전송을 트랜잭션과 분리해 확정적으로 저장하고, 별도 워커가 재시도/백오프/사이드이펙트를 수행하는 전통 패턴입니다.
-//
-//    핵심 아이디어
-//    •	도메인 트랜잭션 내(BEFORE_COMMIT 권장) 에 Outbox 레코드를 쓰기만 한다.
-//    •	커밋 후 별도 스케줄러/워커가 Outbox를 읽어 전송 시도 → 성공 시 SENT, 실패 시 RETRY/FAILED 로 상태 전이.
 }
