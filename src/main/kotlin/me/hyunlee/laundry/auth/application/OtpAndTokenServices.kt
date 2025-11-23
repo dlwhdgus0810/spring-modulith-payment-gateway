@@ -231,7 +231,7 @@ class AuthService(
     }
 
     private fun generateClaims(user: UserDirectoryPort.UserSummary): Map<String, Any> = mapOf(
-        "role" to user.role.name,
+        "roles" to listOf(user.role.name),
         "name" to user.firstName
     )
 
